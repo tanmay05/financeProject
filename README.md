@@ -1,3 +1,3 @@
 # financeProject
 
-#this project is interesting
+# this project is interesting
