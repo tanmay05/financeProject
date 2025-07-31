@@ -1,9 +1,15 @@
 pipeline {
     agent any
+
+    environment {
+        LABS= credential('labcreds')
+    }
     stages {
         stage('Build') {
             steps {
-                echo 'build completed successfully'
+                sh 'pip3 install --ser pipenv'
+                sh '/bitnami/jenkins/home/.local/bin/pipenv --rm || exit 0'
+                sh '/bitnami/jenkins/home/.local/bin/pipenv install'
             }
         }
     }
@@ -14,12 +20,13 @@ pipeline {
         }
     stage('Package') {
             steps {
-                echo 'Package completed successfully'
+                sh 'zip -r financeProject.zip .'
             }
         }
         stage('Deploy') {
             steps {
-                echo 'Deploy completed successfully'
+                sh 'sshpass -p $LABS_PSW scp -o StrictHostKeyChecking=no  -r .
+                $LABS_USR@$g01.itversity.com:/home/itv020723/financeProject'
             }
         }
     }
